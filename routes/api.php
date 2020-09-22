@@ -2,7 +2,10 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\Login;
+use App\Http\Controllers\Register;
+use Illuminate\Support\Facades\Auth;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -14,6 +17,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::post('/register', [Register::class,'register'])->name('register');
+Route::post('/login', [Login::class,'login'])->name('login');
+Route::get('/category', [CategoryController::class,'showAll']);
+Route::middleware('auth:api')->group(function() {
+    Route::put('/createCategory', [CategoryController::class, 'create']);
 });
