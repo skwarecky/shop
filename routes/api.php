@@ -22,4 +22,5 @@ Route::post('/login', [Login::class,'login'])->name('login');
 Route::get('/category', [CategoryController::class,'showAll']);
 Route::middleware('auth:api')->group(function() {
     Route::put('/createCategory', [CategoryController::class, 'create']);
+    Route::post('/editCategory/{id}', [CategoryController::class, 'edit']);
 });
