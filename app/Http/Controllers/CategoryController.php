@@ -28,7 +28,6 @@ class CategoryController extends Controller
      */
     public function create(Request $request)
     {
-        // dd($request);
         $validator = Validator::make($request->all(), [
             'name'          => 'required|max:255',
             'description'   => 'max:255',
@@ -85,9 +84,35 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function edit(Category $category)
-    {
-        //
+    public function edit($id, Request $request)
+    {   
+        $validator = Validator::make($request->all(), [
+            'name'          => 'required|max:255',
+            'description'   => 'max:255',
+            'image'         => 'sometimes|nullable|file|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+        if($validator->fails()){
+            return Response::sendError('Validation Error.', $validator->errors());
+        }
+        $category = Category::find($id);
+        if(empty($category)){
+            return Response::sendError('Category not found');
+        }
+        else{
+            $name = NULL;
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $name = time().mt_rand(10000,99999).'.'.$image->getClientOriginalExtension();
+                $destinationPath = public_path('/images');
+                $image->move($destinationPath, $name);
+            }
+            if($name == NULL && $category->image != NULL) CategoryController::removeImage($category->image);
+            $category->name = $request->name;
+            $category->description = $request->description;
+            $category->image = $name;
+            $category->save();
+            return Response::sendResponse($category, 'Product updated successfully.');
+        }
     }
 
     /**
@@ -111,5 +136,8 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         //
+    }
+    private static function remogeImage($name){
+        File::delete('images/'.$name);
     }
 }
