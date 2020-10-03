@@ -92,28 +92,25 @@ class CategoryController extends Controller
             return Response::sendResponse($category, 'Product updated successfully.');
         }
     }
-
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Category  $category
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Category $category)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
+     * Remove the specified category
      *
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy($id, Request $request)
     {
-        //
+        $category = Category::find($id);
+        //TODO - check if Product are in category
+        // return Response::sendError('Change category in existed product');
+        if(empty($category)){
+            return Response::sendError('Category not found');
+        }
+        else{
+            if(!empty($category->image))  CategoryController::removeImage($category->image);
+            $category->forceDelete();
+            return Response::sendResponse(null,'Category permanently deleted successfully.');
+        }
     }
     private static function remogeImage($name){
         File::delete('images/'.$name);
