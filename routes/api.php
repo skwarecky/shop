@@ -23,4 +23,5 @@ Route::get('/category', [CategoryController::class,'showAll']);
 Route::middleware('auth:api')->group(function() {
     Route::put('/createCategory', [CategoryController::class, 'create']);
     Route::post('/editCategory/{id}', [CategoryController::class, 'edit']);
+    Route::delete('/deleteCategory/{id}', [CategoryController::class, 'destroy']);
 });
