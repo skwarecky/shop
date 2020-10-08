@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Login;
 use App\Http\Controllers\Register;
 use Illuminate\Support\Facades\Auth;
@@ -20,8 +21,25 @@ use Illuminate\Support\Facades\Auth;
 Route::post('/register', [Register::class,'register'])->name('register');
 Route::post('/login', [Login::class,'login'])->name('login');
 Route::get('/category', [CategoryController::class,'showAll']);
+Route::get('/allProduct', [ProductController::class,'showAll']);
+Route::get('/allProductByCategory/{categoryid}', [ProductController::class,'showByCategory']);
 Route::middleware('auth:api')->group(function() {
+    /**
+     * Category actions
+     */
     Route::put('/createCategory', [CategoryController::class, 'create']);
     Route::post('/editCategory/{id}', [CategoryController::class, 'edit']);
     Route::delete('/deleteCategory/{id}', [CategoryController::class, 'destroy']);
+    /**
+     * Product actions
+     */
+    Route::put('/addProduct', [ProductController::class, 'create']);
+    Route::post('/editProduct/{id}', [ProductController::class, 'edit']);
+    Route::post('/addQuantityProduct/{id}', [ProductController::class, 'addQuantity']);
+    Route::post('/addDiscount/{id}', [ProductController::class, 'addDiscount']);
+    Route::delete('/deleteProduct/{id}', [ProductController::class, 'delete']);
+    /**
+     * Order actions
+     */
+
 });
