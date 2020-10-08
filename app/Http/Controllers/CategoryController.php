@@ -112,7 +112,7 @@ class CategoryController extends Controller
             return Response::sendResponse(null,'Category permanently deleted successfully.');
         }
     }
-    private static function remogeImage($name){
+    private static function removeImage($name){
         File::delete('images/'.$name);
     }
 }
